@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         try {
             Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
             startActivity(intent);
-            Toast.makeText(this, "找到Weixin，开启服务即可", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "找到微信自动服务，开启服务即可", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }

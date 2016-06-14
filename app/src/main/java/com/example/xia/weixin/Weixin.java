@@ -38,6 +38,27 @@ public class Weixin extends AccessibilityService{
         }
     }
 
+    private void tiShi()
+    {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("提示");
+        List<AccessibilityNodeInfo> cancel= nodeInfo.findAccessibilityNodeInfosByText("取消");
+        if(list.size()>0&&cancel.size()>0)
+        {
+            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
+            AccessibilityNodeInfo node = list.get(0);
+            if(list.size()>0)
+            {//点击不再提示选项
+                AccessibilityNodeInfo parent = node.getParent();
+                parent.getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+            list = nodeInfo.findAccessibilityNodeInfosByText("确定");
+            node = list.get(0);
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
+            //会有无法定位的提示 text:提高微信定位精确度。
+        }
+    }
+
     private void handleUpdate()
     {
 
@@ -56,7 +77,7 @@ public class Weixin extends AccessibilityService{
             }
         }
         nodeInfo = getRootInActiveWindow();
-        list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");
+        list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
         if(list.size()>0)
         {
             AccessibilityNodeInfo parent = list.get(0).getParent();
@@ -73,9 +94,34 @@ public class Weixin extends AccessibilityService{
             AccessibilityNodeInfo node = list.get(0);
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
         }
+        //update
 
+        tiShi();//代替下了代码
+  /*
+        nodeInfo = getRootInActiveWindow();
+        list = nodeInfo.findAccessibilityNodeInfosByText("你的位置信息会被保留");
+        if(list.size()>0)
+        {
+            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
+            AccessibilityNodeInfo node = list.get(0);
+            AccessibilityNodeInfo parent=node.getParent();
+            parent.getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
 
+            list = nodeInfo.findAccessibilityNodeInfosByText("确定");
+            node = list.get(0);
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
+        }*/
 
+//会有无法定位的提示 text:提高微信定位精确度。
+
+        //判断是否有打招呼的人
+        nodeInfo = getRootInActiveWindow();
+        list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");
+        if(list.size()>0)
+        {
+            AccessibilityNodeInfo node=list.get(0);
+            node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
 
 
     }
