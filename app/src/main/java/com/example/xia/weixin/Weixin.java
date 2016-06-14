@@ -44,8 +44,8 @@ public class Weixin extends AccessibilityService{
     }
     private void handle2()
     {
+//1不涉及界面变化11
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("发现");
         if(list.size()>0)
         {
@@ -55,6 +55,28 @@ public class Weixin extends AccessibilityService{
                 parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
             }
         }
+        nodeInfo = getRootInActiveWindow();
+        list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");
+        if(list.size()>0)
+        {
+            AccessibilityNodeInfo parent = list.get(0).getParent();
+            if(parent != null)
+            {
+                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
+            }
+        }
+
+        nodeInfo = getRootInActiveWindow();
+        list = nodeInfo.findAccessibilityNodeInfosByText("开始查看");
+        if(list.size()>0)
+        {
+            AccessibilityNodeInfo node = list.get(0);
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
+        }
+
+
+
+
 
     }
     private void handle3()
