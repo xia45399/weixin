@@ -55,7 +55,6 @@ public class Weixin extends AccessibilityService{
             list = nodeInfo.findAccessibilityNodeInfosByText("确定");
             node = list.get(0);
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
-            //会有无法定位的提示 text:提高微信定位精确度。
         }
     }
 
@@ -113,6 +112,17 @@ public class Weixin extends AccessibilityService{
         }*/
 
 //会有无法定位的提示 text:提高微信定位精确度。
+//        nodeInfo = getRootInActiveWindow();
+//        list = nodeInfo.findAccessibilityNodeInfosByText("提高微信定位精确度");
+//        if(list.size()>0)
+//        {
+//            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
+//            AccessibilityNodeInfo node = list.get(0);
+//            list = nodeInfo.findAccessibilityNodeInfosByText("跳过");
+//            node = list.get(0);
+//            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
+//        }
+
 
         //判断是否有打招呼的人
         nodeInfo = getRootInActiveWindow();
@@ -122,6 +132,7 @@ public class Weixin extends AccessibilityService{
             AccessibilityNodeInfo node=list.get(0);
             node.getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
+        //返回到上层
 
 
     }
