@@ -39,16 +39,9 @@ public class Weixin extends AccessibilityService{
                         if(type.equals("com.tencent.mm.ui.LauncherUI"))    // 刚进微信的时候
                         {
                             entry("发现");
-                            AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-                            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
-                            if(list.size()>0)
-                            {
-                                AccessibilityNodeInfo parent = list.get(0).getParent();
-                                if(parent != null)
-                                {
-                                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
-                                }
-                            }
+                            fujinderen a=new fujinderen();
+                            a.aaaaa();
+
                         }
                         if(type.equals("com.tencent.mm.ui.NearbyFriendShowSayHiUI")){//有人打招呼
 
