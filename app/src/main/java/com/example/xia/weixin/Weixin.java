@@ -50,7 +50,7 @@ public class Weixin extends AccessibilityService{
                                 }
                             }
                         }
-                        if(type.equals("com.tencent.mm.ui.base.o")){
+                        if(type.equals("com.tencent.mm.ui.NearbyFriendShowSayHiUI")){//有人打招呼
 
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI")){
