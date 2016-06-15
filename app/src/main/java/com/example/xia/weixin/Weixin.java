@@ -31,7 +31,7 @@ public class Weixin extends AccessibilityService{
                         // com.tencent.mm.ui.LauncherUI 刚进微信的时候
                         // com.tencent.mm.ui.base.o：加载附近的人列表,meiy
                         // com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI 附近人列表
-                        //com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
+                        // com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
                         // com.tencent.mm.plugin.profile.ui.ContactInfoUI 打招呼按钮界面
                         // com.tencent.mm.ui.contact.SayHiEditUI 发送打招呼界面
                         // com.tencent.mm.plugin.profile.ui.ContactInfoUI
@@ -39,21 +39,19 @@ public class Weixin extends AccessibilityService{
                         if(type.equals("com.tencent.mm.ui.LauncherUI"))    // 刚进微信的时候
                         {
                             entry("发现");
-                            fujinderen a=new fujinderen();
-                            a.aaaaa();
-
+                            fujinderen2();
                         }
                         if(type.equals("com.tencent.mm.ui.NearbyFriendShowSayHiUI")){//有人打招呼
 
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI")){
-
+                            fujinrenList();
                         }
                         if(type.equals("com.tencent.mm.plugin.profile.ui.ContactInfoUI")){
 
                         }
                         if(type.equals("com.tencent.mm.ui.contact.SayHiEditUI")){
-
+                            SayHiUi();
                         }
 
                         break;
@@ -90,11 +88,11 @@ public class Weixin extends AccessibilityService{
     {
 
     }
-    private void handle2()
+
+    private void fujinderen2()
     {
-//1不涉及界面变化11
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("发现");
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
         if(list.size()>0)
         {
             AccessibilityNodeInfo parent = list.get(0).getParent();
@@ -103,45 +101,47 @@ public class Weixin extends AccessibilityService{
                 parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
             }
         }
-        nodeInfo = getRootInActiveWindow();
-        list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
-        if(list.size()>0)
-        {
-            AccessibilityNodeInfo parent = list.get(0).getParent();
-            if(parent != null)
-            {
-                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
-            }
-        }
-
-        tiShi();//第一次可能会有提示
-
+    }
+    private void fujinrenList(){
         //附近的人页面，查找 米以内
-        nodeInfo=getRootInActiveWindow();
-        list=nodeInfo.findAccessibilityNodeInfosByText("米以内");
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
         if (list.size()>0)//找到米以内了
         {
-            for(int i=0;i<list.size();i++)
+            for(int i=0;i<3;i++)
             {
-                if(list.get(0).getParent().findAccessibilityNodeInfosByText("朋友").size()>0)
+                if(list.get(i).getParent().findAccessibilityNodeInfosByText("朋友").size()>0)
                 {
                     //如果附近的人里面有自己的好友，下一个
-                     continue;
+                    continue;
                 }
                 list.get(i).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
-
         }
-
-
-        //判断界面是否有打招呼，有说明是新人
-        nodeInfo = getRootInActiveWindow();
-        list = nodeInfo.findAccessibilityNodeInfosByText("打招呼");
+    }
+    private void SayHiUi(){
+        //判断界面是否有打招呼，有的话点击打招呼
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("打招呼");
         if(list.size()>0)
         {
             AccessibilityNodeInfo node=list.get(0);
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//界面更新
         }
+    }
+    private void handle2()
+    {
+//1不涉及界面变化11
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+
+
+
+        tiShi();//第一次可能会有提示
+
+
+
+
+
 
 //        nodeInfo = getRootInActiveWindow();
 //        list = nodeInfo.findAccessibilityNodeInfosByText("发送");
@@ -179,7 +179,7 @@ public class Weixin extends AccessibilityService{
 
         //判断是否有打招呼的人
         nodeInfo = getRootInActiveWindow();
-        list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");
         if(list.size()>0)
         {
             AccessibilityNodeInfo node=list.get(0);
