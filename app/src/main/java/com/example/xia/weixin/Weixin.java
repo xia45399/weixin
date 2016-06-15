@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import java.lang.ref.SoftReference;
 import java.util.List;
 
 /**
@@ -27,16 +28,27 @@ public class Weixin extends AccessibilityService{
                     case 1:
                         //抢红包
                     case 2://附近好友
-                     //   handle2();  com.tencent.mm.ui.LauncherUI 刚进微信的时候
-                     // com.tencent.mm.ui.base.o：加载附近的人列表
-                     // com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI 附近人列表
-                        //com.tencent.mm.plugin.profile.ui.ContactInfoUI 打招呼按钮界面
-                        //com.tencent.mm.ui.contact.SayHiEditUI 发送打招呼界面
-                        //com.tencent.mm.plugin.profile.ui.ContactInfoUI
+                        // com.tencent.mm.ui.LauncherUI 刚进微信的时候
+                        // com.tencent.mm.ui.base.o：加载附近的人列表,meiy
+                        // com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI 附近人列表
+                        //com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
+                        // com.tencent.mm.plugin.profile.ui.ContactInfoUI 打招呼按钮界面
+                        // com.tencent.mm.ui.contact.SayHiEditUI 发送打招呼界面
+                        // com.tencent.mm.plugin.profile.ui.ContactInfoUI
                         String type= event.getClassName().toString();
                         if(type.equals("com.tencent.mm.ui.LauncherUI"))    // 刚进微信的时候
                         {
-
+                            entry("发现");
+                            AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+                            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
+                            if(list.size()>0)
+                            {
+                                AccessibilityNodeInfo parent = list.get(0).getParent();
+                                if(parent != null)
+                                {
+                                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
+                                }
+                            }
                         }
                         if(type.equals("com.tencent.mm.ui.base.o")){
 
@@ -235,6 +247,23 @@ public class Weixin extends AccessibilityService{
             e.printStackTrace();
         }
     }
+
+    private void entry(String a)
+    {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(a);
+        if(list.size()>0)
+        {
+            AccessibilityNodeInfo parent = list.get(0).getParent();
+            if(parent != null)
+            {
+                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
+        }
+
+    }
+
     @Override
     public void onInterrupt() {
 
