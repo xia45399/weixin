@@ -39,7 +39,7 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="启动微信"
+        android:text="暂停服务"
         android:id="@+id/button0"
         android:layout_alignTop="@+id/service_button"
         android:layout_alignParentRight="true"
@@ -73,8 +73,8 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/button4"
+        android:text="发 朋 友 圈  "
+        android:id="@+id/button5"
         android:layout_alignTop="@+id/button1"
         android:layout_alignLeft="@+id/button8"
         android:layout_alignStart="@+id/button8" />
@@ -84,18 +84,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Button"
-        android:id="@+id/button5"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignLeft="@+id/button4"
-        android:layout_alignStart="@+id/button4" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Button"
         android:id="@+id/button6"
-        android:layout_alignBottom="@+id/button3"
+        android:layout_alignBottom="@+id/button2"
         android:layout_alignLeft="@+id/button5"
         android:layout_alignStart="@+id/button5" />
 
@@ -103,19 +93,29 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4通过好友"
-        android:id="@+id/button44"
-        android:layout_alignTop="@+id/button8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:text="New Button"
+        android:id="@+id/button7"
+        android:layout_alignBottom="@+id/button3"
+        android:layout_alignLeft="@+id/button6"
+        android:layout_alignStart="@+id/button6" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="暂停服务"
+        android:text="4通过好友"
+        android:id="@+id/button4"
+        android:layout_alignTop="@+id/button8"
+        android:layout_alignLeft="@+id/service_button"
+        android:layout_alignStart="@+id/service_button"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="其他的的"
         android:id="@+id/button8"
-        android:layout_below="@+id/button6"
+        android:layout_below="@+id/button7"
         android:layout_alignRight="@+id/button0"
         android:layout_alignEnd="@+id/button0"
         android:layout_marginTop="40dp" />

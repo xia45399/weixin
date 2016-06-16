@@ -208,10 +208,13 @@ public class Weixin extends AccessibilityService{
             for(int i=0;i<list2.size();i++)
             {
                 list2.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                sleep(3000);
+                sleep(5000);
                 performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
         }
+        kind=0;
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+
     }
 
     private void handle3()

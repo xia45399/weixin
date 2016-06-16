@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
                 startMM();
             }
         });
-        findViewById(R.id.button44).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Weixin.kind=4;
@@ -46,13 +46,13 @@ public class MainActivity extends ActionBarActivity {
                 startMM();
             }
         });
-        findViewById(R.id.button0).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startMM();
             }
         });
-        findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Weixin.kind=0;
