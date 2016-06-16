@@ -32,6 +32,13 @@ public class MainActivity extends ActionBarActivity {
                 startMM();
             }
         });
+        findViewById(R.id.button44).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Weixin.kind=4;
+                startMM();
+            }
+        });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
