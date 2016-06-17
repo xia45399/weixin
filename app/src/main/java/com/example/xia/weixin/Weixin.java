@@ -4,6 +4,7 @@ import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,21 +29,13 @@ public class Weixin extends AccessibilityService{
                     case 1:
                         //抢红包
                     case 2://附近好友
-                        // com.tencent.mm.ui.LauncherUI 刚进微信的时候
-                        // com.tencent.mm.ui.base.g 提高微信定位精度
-                        // com.tencent.mm.ui.base.o：基本列表
-                        // com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
-                        //com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI 附近的人打招呼列表
-                        // com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI 附近人列表
-                        // com.tencent.mm.plugin.profile.ui.ContactInfoUI 打招呼按钮界面
-                        // com.tencent.mm.ui.contact.SayHiEditUI 发送打招呼界面
-                        // com.tencent.mm.plugin.profile.ui.ContactInfoUI
-                        if(type.equals("com.tencent.mm.ui.LauncherUI"))    // 刚进微信的时候
+
+                        if(type.equals("com.tencent.mm.ui.LauncherUI"))
                         {
                             entry("发现");
-                            fujinderen2();
+                            clickFujinDeRen();
                         }
-                        if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI")){//有人打招呼
+                        if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI")){
                             otherSayHiUi();
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI")){
@@ -50,6 +43,7 @@ public class Weixin extends AccessibilityService{
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI")){
                             NearbyFriendsList();
+
                         }
                         if(type.equals("com.tencent.mm.plugin.profile.ui.ContactInfoUI")){
 
@@ -95,7 +89,7 @@ public class Weixin extends AccessibilityService{
 
     }
 
-    private void fujinderen2()
+    private void clickFujinDeRen()
     {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//有点小问题
@@ -109,24 +103,41 @@ public class Weixin extends AccessibilityService{
         }
     }
     private void NearbyFriendsList(){
+        List<String> requestList=new ArrayList<String>();
+
         //附近的人页面，查找 米以内
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
         if (list.size()>0)//找到米以内了
         {
-            for(int i=0;i<list.size();i++)
+            for(;requestList.size()<40;)
+//          while (requestList.size()<40)
             {
-                if(list.get(i).getParent().findAccessibilityNodeInfosByText("(朋友)").size()>0)
+
+                for (int i = 0; i < list.size(); i++)
                 {
-                    //如果附近的人里面有自己的好友，下一个
-                    continue;
+                    if (list.get(i).getParent().findAccessibilityNodeInfosByText("(朋友)").size() > 0)
+                    {
+                        //如果附近的人里面有自己的好友，下一个
+                        continue;
+                    }
+                    String name=list.get(i).getParent().getChild(0).getText().toString();
+                    if(requestList.contains(name))
+                    {
+                        continue;
+                    }
+                    requestList.add(requestList.size(),name);
+                    list.get(i).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    sleep(1000);
+                    SayHiUi();
+                    sleep(2000);
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                    sleep(1000);
                 }
-                list.get(i).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                list.get(0).getParent().getParent().performAction(4096);
                 sleep(1000);
-                SayHiUi();
-                sleep(2000);
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                sleep(1000);
+                nodeInfo = getRootInActiveWindow();
+                list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
             }
             kind=0;
         }
