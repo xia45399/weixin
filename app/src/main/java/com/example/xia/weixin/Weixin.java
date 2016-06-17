@@ -208,9 +208,15 @@ public class Weixin extends AccessibilityService{
         if(nodeInfo == null) {
             return;
         }
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");//
         if(!list.isEmpty())
-            nodeInfo.findAccessibilityNodeInfosByText("拆红包").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        {
+            list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+        else {
+             list = nodeInfo.findAccessibilityNodeInfosByText("開");
+            nodeInfo.findAccessibilityNodeInfosByText("给你").get(0).getParent().getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
         performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
     }
     private void clickFujinDeRen()
