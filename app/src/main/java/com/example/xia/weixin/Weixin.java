@@ -75,16 +75,18 @@ public class Weixin extends AccessibilityService{
                         {
                             entry("发现");
                             clickFujinDeRen();
+                            break;
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI")){
                             otherSayHiUi();
+                            break;
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI")){
 
                         }
                         if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI")){
                             NearbyFriendsList();
-
+                            break;
                         }
                         if(type.equals("com.tencent.mm.plugin.profile.ui.ContactInfoUI")){
 
@@ -97,11 +99,52 @@ public class Weixin extends AccessibilityService{
 
                         break;
                     case 3:
+                        //可能出现的提示
                         if(type.equals("com.tencent.mm.ui.base.g"))
                         {
+                            upLoadContack();//第一次会有上传通讯录的提示消息
                             cancelUpDate();
+                            break;
                         }
-                        handle3();//通讯录添加好友
+                        // 刚进微信的时候
+                        if(type.equals("com.tencent.mm.ui.LauncherUI"))
+                        {
+                            entry("通讯录");
+                            List<AccessibilityNodeInfo> list = getWindowList("群聊");
+                            if(list.size()>0)
+                            {
+                                list.get(0).getParent().getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                            break;
+                        }
+                        //点击新的朋友
+                        if(type.equals("com.tencent.mm.plugin.subapp.ui.friend.FMessageConversationUI"))
+                        {
+                            List<AccessibilityNodeInfo> list = getWindowList("添加手机联系人");
+                            if(!list.isEmpty()){
+                                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                            break;
+                        }
+
+                        if(type.equals("com.tencent.mm.ui.bindmobile.BindMContactIntroUI"))
+                        {
+                            getWindowList("上传通讯录");
+                            break;
+                        }
+                        if(type.equals("com.tencent.mm.ui.bindmobile.MobileFriendUI"))
+                        {
+                            List<AccessibilityNodeInfo> list = getWindowList("添加");
+                            for (int i=0;i<list.size();i++)
+                            {
+                                list.get(i).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                            }
+                            kind=0;
+                            sleep(500);
+                            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                        }
+
 
                         break;
                     case 4:
@@ -113,7 +156,7 @@ public class Weixin extends AccessibilityService{
                         {
                             entry("通讯录");
                             AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-                            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("新的朋友");
+//                            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("新的朋友");
                             nodeInfo.findAccessibilityNodeInfosByText("群聊").get(0).getParent().getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         }
                         if (type.equals("com.tencent.mm.plugin.subapp.ui.friend.FMessageConversationUI"))
@@ -183,6 +226,21 @@ public class Weixin extends AccessibilityService{
             }
         }
     }
+    private void gps()
+    {
+        //会有无法定位的提示 text:提高微信定位精确度。
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("提高微信定位精确度");
+        if(list.size()>0)
+        {
+            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
+            AccessibilityNodeInfo node = list.get(0);
+            list = nodeInfo.findAccessibilityNodeInfosByText("跳过");
+            node = list.get(0);
+            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
+        }
+    }
+
     private void NearbyFriendsList(){
         List<String> requestList=new ArrayList<String>();
 
@@ -253,36 +311,7 @@ public class Weixin extends AccessibilityService{
 
 
     }
-    private void handle2()
-    {
-//        nodeInfo = getRootInActiveWindow();
-//        list = nodeInfo.findAccessibilityNodeInfosByText("开始查看");
-//        if(list.size()>0)
-//        {
-//            AccessibilityNodeInfo node = list.get(0);
-//            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
-//        }
 
-//会有无法定位的提示 text:提高微信定位精确度。
-//        nodeInfo = getRootInActiveWindow();
-//        list = nodeInfo.findAccessibilityNodeInfosByText("提高微信定位精确度");
-//        if(list.size()>0)
-//        {
-//            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
-//            AccessibilityNodeInfo node = list.get(0);
-//            list = nodeInfo.findAccessibilityNodeInfosByText("跳过");
-//            node = list.get(0);
-//            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
-//        }
-
-
-
-
-
-        //返回到上层
-
-
-    }
     private void accept4(){
         //判断是否有接收字样
         AccessibilityNodeInfo nodeInfo2 = getRootInActiveWindow();
@@ -342,8 +371,16 @@ private void common()
             e.printStackTrace();
         }
     }
+
+    private void upLoadContack(){
+        if(getWindowList("仅使用特征码").size()>0)
+        {
+            getWindowList("是").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+    }
     private void tiShi()
     {
+
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("提示");
         List<AccessibilityNodeInfo> cancel= nodeInfo.findAccessibilityNodeInfosByText("取消");
@@ -394,15 +431,18 @@ private void common()
     private List<AccessibilityNodeInfo> getWindowList(String findText)
     {
         AccessibilityNodeInfo nodeInfo=getRootInActiveWindow();
+        List<AccessibilityNodeInfo> list = null;
         if (nodeInfo==null)
         {
             return null;
         }
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(findText);
+         list = nodeInfo.findAccessibilityNodeInfosByText(findText);
+        //如何才能保证返回的list不为空呢？。。。可以没有数据，但是不能为null
         return list;
     }
     @Override
     public void onInterrupt() {
 
     }
+
 }
