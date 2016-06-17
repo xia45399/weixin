@@ -1,6 +1,8 @@
 package com.example.xia.weixin;
 
 import android.accessibilityservice.AccessibilityService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -20,16 +22,55 @@ public class Weixin extends AccessibilityService{
         String type= event.getClassName().toString();
         switch (eventType) {
             case 64:
-                List<CharSequence> t64=event.getText();
+                List<CharSequence> texts=event.getText();
+                if (!texts.isEmpty()) {
+                    for (CharSequence text : texts) {
+                        String content = text.toString();
+                        if (content.contains("[微信红包]")) {
+                            //模拟打开通知栏消息
+                            if (event.getParcelableData() != null
+                                    && event.getParcelableData() instanceof Notification) {
+                                Notification notification = (Notification) event.getParcelableData();
+                                PendingIntent pendingIntent = notification.contentIntent;
+                                try {
+                                    pendingIntent.send();
+                                } catch (PendingIntent.CanceledException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                }
                 break;
 
             case 32:
                 switch (kind)
                 {
-                    case 1:
-                        //抢红包
+                    case 1: //抢红包
+                        if(type.equals("com.tencent.mm.ui.base.g"))
+                        {
+                            cancelUpDate();
+                        }
+                        if (type.equals("com.tencent.mm.ui.LauncherUI"))
+                        {//通过通知栏进入了微信
+                           clickLastPacket();
+                        }
+                        if (type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")){
+                            kind=0;
+                            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                            sleep(1000);
+                            kind=1;
+                        }
+                        if(type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI")){
+                            openpacket();
+                            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                        }
                     case 2://附近好友
-
+                        if(type.equals("com.tencent.mm.ui.base.g"))
+                        {
+                            cancelUpDate();
+                        }
                         if(type.equals("com.tencent.mm.ui.LauncherUI"))
                         {
                             entry("发现");
@@ -48,9 +89,6 @@ public class Weixin extends AccessibilityService{
                         if(type.equals("com.tencent.mm.plugin.profile.ui.ContactInfoUI")){
 
                         }
-                        if(type.equals("com.tencent.mm.ui.contact.SayHiEditUI")){
-                            //SayHiUi();
-                        }
 
                         //异常判断
                         if(type.equals("com.tencent.mm.ui.base.g")){
@@ -59,10 +97,18 @@ public class Weixin extends AccessibilityService{
 
                         break;
                     case 3:
+                        if(type.equals("com.tencent.mm.ui.base.g"))
+                        {
+                            cancelUpDate();
+                        }
                         handle3();//通讯录添加好友
 
                         break;
                     case 4:
+                        if(type.equals("com.tencent.mm.ui.base.g"))
+                        {
+                            cancelUpDate();
+                        }
                         if(type.equals("com.tencent.mm.ui.LauncherUI"))    // 刚进微信的时候
                         {
                             entry("通讯录");
@@ -74,7 +120,11 @@ public class Weixin extends AccessibilityService{
                         {
                             accept4();//看是否有接收字样，有的话说明有人要加你
                         }
-
+                        default:
+                            if(type.equals("com.tencent.mm.ui.base.g"))
+                            {
+                                cancelUpDate();
+                            }
                         break;
                 }
 
@@ -89,6 +139,37 @@ public class Weixin extends AccessibilityService{
 
     }
 
+    private void clickLastPacket()
+    {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        if(nodeInfo == null) {
+            return;
+        }
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("领取红包");
+        if(!list.isEmpty())//list不为空
+        {
+            for (int i = list.size() - 1; i >= 0; i--)
+            {
+                AccessibilityNodeInfo parent = list.get(i).getParent();
+                if (parent != null)
+                {
+                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    break;
+                }
+            }
+        }
+    }
+    private void openpacket()
+    {
+        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+        if(nodeInfo == null) {
+            return;
+        }
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("拆红包");
+        if(!list.isEmpty())
+            nodeInfo.findAccessibilityNodeInfosByText("拆红包").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+    }
     private void clickFujinDeRen()
     {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
@@ -113,6 +194,10 @@ public class Weixin extends AccessibilityService{
             for(;requestList.size()<40;)
 //          while (requestList.size()<40)
             {
+                list.get(0).getParent().getParent().performAction(4096);
+                sleep(1000);
+                nodeInfo = getRootInActiveWindow();
+                list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
 
                 for (int i = 0; i < list.size(); i++)
                 {
@@ -134,12 +219,9 @@ public class Weixin extends AccessibilityService{
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                     sleep(1000);
                 }
-                list.get(0).getParent().getParent().performAction(4096);
-                sleep(1000);
-                nodeInfo = getRootInActiveWindow();
-                list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
             }
             kind=0;
+            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
         }
     }
     private void SayHiUi(){
@@ -173,11 +255,6 @@ public class Weixin extends AccessibilityService{
     }
     private void handle2()
     {
-
-
-
-
-
 //        nodeInfo = getRootInActiveWindow();
 //        list = nodeInfo.findAccessibilityNodeInfosByText("开始查看");
 //        if(list.size()>0)
@@ -185,10 +262,6 @@ public class Weixin extends AccessibilityService{
 //            AccessibilityNodeInfo node = list.get(0);
 //            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击发现
 //        }
-        //update ui
-
-
-
 
 //会有无法定位的提示 text:提高微信定位精确度。
 //        nodeInfo = getRootInActiveWindow();
@@ -255,7 +328,10 @@ public class Weixin extends AccessibilityService{
 
 
     }
+private void common()
+{
 
+}
     private void sleep(int ms)
     {
         try
@@ -285,6 +361,20 @@ public class Weixin extends AccessibilityService{
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
         }
     }
+    private void cancelUpDate(){
+        List<AccessibilityNodeInfo> list=getWindowList("立刻安装");
+        if(!list.isEmpty()){
+            list=getWindowList("取消");
+            list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+
+        list=getWindowList("是否取消安装");
+        if(!list.isEmpty()){
+            list=getWindowList("是");
+            list.get(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+        }
+
+    }
 
     private void entry(String a)
     {
@@ -299,9 +389,18 @@ public class Weixin extends AccessibilityService{
                 parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
-
     }
 
+    private List<AccessibilityNodeInfo> getWindowList(String findText)
+    {
+        AccessibilityNodeInfo nodeInfo=getRootInActiveWindow();
+        if (nodeInfo==null)
+        {
+            return null;
+        }
+        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(findText);
+        return list;
+    }
     @Override
     public void onInterrupt() {
 

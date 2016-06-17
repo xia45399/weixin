@@ -25,6 +25,12 @@ public class MainActivity extends ActionBarActivity {
                 openService();
             }
         });
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Weixin.kind=1;
+            }
+        });
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -32,17 +38,17 @@ public class MainActivity extends ActionBarActivity {
                 startMM();
             }
         });
-        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Weixin.kind=4;
-                startMM();
-            }
-        });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Weixin.kind=3;
+                startMM();
+            }
+        });
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Weixin.kind=4;
                 startMM();
             }
         });

@@ -1,7 +1,7 @@
 附近好友
-     com.tencent.mm.ui.base.o：基本列表
+     com.tencent.mm.ui.base.o：基本列表,加载一些界面的过程
+     com.tencent.mm.ui.base.g; 更新,提高微信定位精度
      com.tencent.mm.ui.LauncherUI 进微信的
-     com.tencent.mm.ui.base.g 提高微信定位精度
      com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
      com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI 附近的人打招呼列表
      com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI 附近人列表
