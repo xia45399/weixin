@@ -1,7 +1,9 @@
-
+111
      com.tencent.mm.ui.base.o：基本列表,加载一些界面的过程
      com.tencent.mm.ui.base.g; 更新,提高微信定位精度
      com.tencent.mm.ui.base.j 提示按钮：照片，视频
+
+2222
      附近好友
      com.tencent.mm.ui.LauncherUI 进微信的
      com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI 附近的人打招呼
@@ -11,7 +13,7 @@
      com.tencent.mm.ui.contact.SayHiEditUI 发送打招呼界面
      com.tencent.mm.plugin.profile.ui.ContactInfoUI
 
-
+333
     添加通讯录
 
     1 点击新的朋友后的
@@ -23,3 +25,7 @@
 
     com.tencent.mm.ui.base.g; 提示：看看手机通讯录里是否谁在使用微信，仅使用特征码
     com.tencent.mm.ui.bindmobile.BindMContactIntroUI 绑定手机号界面
+
+444
+
+555 发朋友圈

@@ -20,6 +20,8 @@ public class Weixin extends AccessibilityService{
 
     public static int pauseService=0;
 
+    public static int upLoadDone=0;//完成了一次发送朋友圈后置1
+
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         int eventType=event.getEventType();
@@ -199,13 +201,14 @@ public class Weixin extends AccessibilityService{
         else {
              list = nodeInfo.findAccessibilityNodeInfosByText("開");
             nodeInfo.findAccessibilityNodeInfosByText("给你").get(0).getParent().getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            sleep(1000);
+            kind=0;
         }
-        kind=0;
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-        sleep(2000);
-        kind=1;
+        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+//        kind=0;
+//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//        sleep(2000);
+//        kind=1;
     }
 
     private void fuJinRen2(String type){
@@ -392,14 +395,22 @@ public class Weixin extends AccessibilityService{
                 list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
-        //这个地方问题比较大，发送朋友圈成功后也会进入这边
+//这个地方问题比较大，发送朋友圈成功后也会进入这边
         else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI"))
         {
             //点击相机按钮
-            list=getWindowList("朋友圈");
-            if(list.size()>0)
+            if(upLoadDone==0)
             {
-                list.get(1).getParent().getParent().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                list=getWindowList("朋友圈");
+                if(list.size()>0)
+                {
+                    list.get(1).getParent().getParent().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+            }
+            else {
+                //说明发生成功之后进入的
+                kind=0;
+                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
         }
 
@@ -414,7 +425,7 @@ public class Weixin extends AccessibilityService{
                 list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
-        else if (type.equals("com.tencent.mm.ui.base.k")) //or g?
+        else if (type.equals("com.tencent.mm.ui.base.j")||type.equals("com.tencent.mm.ui.base.k")) //j k ?
         {
             list=getWindowList("照片");
             if(list.size()>0){
@@ -426,9 +437,11 @@ public class Weixin extends AccessibilityService{
             list=getWindowList("图片");
             if(list.size()>0){
                 list.get(1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                sleep(1000);
             }
         }
         else if(type.equals("com.tencent.mm.plugin.gallery.ui.ImagePreviewUI")){
+
             list=getWindowList("完成");
             if(list.size()>0)
             {
@@ -447,6 +460,7 @@ public class Weixin extends AccessibilityService{
             if (list.size()>0)
             {
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                upLoadDone=1;
             }
         }
 

@@ -60,7 +60,9 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Weixin.kind=5;
+                Weixin.upLoadDone=0;
                 //通过
+                myToast("发送一次朋友圈后会暂停服务");
                 startMM();
             }
         });
@@ -79,7 +81,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-
+public void myToast(String msg)
+{
+    Toast.makeText(this,msg,Toast.LENGTH_LONG).show();
+}
     private void openService() {
         try {
             Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
@@ -112,12 +117,10 @@ public class MainActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

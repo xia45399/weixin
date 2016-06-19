@@ -23,7 +23,9 @@
         android:layout_marginBottom="55dp"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/button3"
-        android:layout_alignEnd="@+id/button3" />
+        android:layout_alignEnd="@+id/button3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -33,7 +35,9 @@
         android:id="@+id/button3"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/button2"
+        android:layout_alignEnd="@+id/button2" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -67,7 +71,9 @@
         android:layout_marginBottom="38dp"
         android:layout_above="@+id/button3"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/button1"
+        android:layout_alignEnd="@+id/button1" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -106,8 +112,10 @@
         android:text="4通过好友"
         android:id="@+id/button4"
         android:layout_alignTop="@+id/button8"
-        android:layout_alignLeft="@+id/service_button"
-        android:layout_alignStart="@+id/service_button"/>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/button3"
+        android:layout_alignEnd="@+id/button3" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -116,8 +124,8 @@
         android:text="其他的的"
         android:id="@+id/button8"
         android:layout_below="@+id/button7"
+        android:layout_marginTop="40dp"
         android:layout_alignRight="@+id/button0"
-        android:layout_alignEnd="@+id/button0"
-        android:layout_marginTop="40dp" />
+        android:layout_alignEnd="@+id/button0" />
 
 </RelativeLayout>
