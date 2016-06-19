@@ -29,12 +29,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Weixin.kind=1;
+                //红包
             }
         });
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Weixin.kind=2;
+                //附近的人
                 startMM();
             }
         });
@@ -42,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Weixin.kind=3;
+                //通讯录
                 startMM();
             }
         });
@@ -49,6 +52,15 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Weixin.kind=4;
+                //通过
+                startMM();
+            }
+        });
+        findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Weixin.kind=5;
+                //通过
                 startMM();
             }
         });
