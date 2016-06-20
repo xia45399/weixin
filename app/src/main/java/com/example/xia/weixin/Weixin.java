@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Created by xia on 2016/6/13.
  */
+
 public class Weixin extends AccessibilityService{
 
     public static int kind=0;
@@ -20,7 +21,10 @@ public class Weixin extends AccessibilityService{
 
     public static int pauseService=0;
 
-    public static int upLoadDone=0;//完成了一次发送朋友圈后置1
+    public static int upLoadFlag =0;
+    //1代表第一次进
+    //2 一瞬间
+    //3 完成发送朋友圈
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -53,10 +57,20 @@ public class Weixin extends AccessibilityService{
                 switch (kind)
                 {
                     case 0:
-                        getWindowList("啦啦啦").get(1).getParent().getParent().getChild(1);//第一条
-                        getWindowList("朋友圈").get(0).getParent().getParent().getChild(1);
-
-                        getWindowList("啦啦啦").get(1).getParent().getParent().performAction(4096);
+//                        getWindowList("啦啦啦").get(1).getParent().getParent().getChild(1);//第一条
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getChild(1);
+//                        getWindowList("啦啦啦").get(1).getParent().getParent().performAction(4096);
+//
+//                        //接下来
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getParent().getChild(1).getChild(0);
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getParent().getChild(1).getChild(1).getChild(5).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//
+//                        //具体一条说说
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getParent().getChild(1).getChild(1);
+//
+//                        //是否评论
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getParent().getChild(1).getChild(1).findAccessibilityNodeInfosByText("啦啦啦");
+//                        getWindowList("朋友圈").get(0).getParent().getParent().getParent().getChild(1).getChild(1).getChild(6).getText().toString().contains("啦啦啦");
 
                         break;
 
@@ -259,20 +273,7 @@ public class Weixin extends AccessibilityService{
             }
         }
     }
-    private void gps()
-    {
-        //会有无法定位的提示 text:提高微信定位精确度。
-        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("提高微信定位精确度");
-        if(list.size()>0)
-        {
-            list = nodeInfo.findAccessibilityNodeInfosByText("下次不提示");
-            AccessibilityNodeInfo node = list.get(0);
-            list = nodeInfo.findAccessibilityNodeInfosByText("跳过");
-            node = list.get(0);
-            node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//
-        }
-    }
+
 
     private void NearbyFriendsList(){
         List<String> requestList=new ArrayList<String>();
@@ -406,18 +407,35 @@ public class Weixin extends AccessibilityService{
 //这个地方问题比较大，发送朋友圈成功后也会进入这边
         else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI"))
         {
-            //点击相机按钮
-            if(upLoadDone==0)
-            {
+            upLoadFlag++;
+
+
+            if(upLoadFlag==1)
+            {//第一次进 //点击相机按钮
                 list=getWindowList("朋友圈");
                 if(list.size()>0)
                 {
                     list.get(1).getParent().getParent().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
             }
-            else {
-                //说明发生成功之后进入的
+            else if (upLoadFlag==2)
+            {//第二次进是进入图片预览的瞬间，不处理
+            //vivo第二次进入是编辑朋友圈界面 之前的
+            }
+            else if(upLoadFlag==3)
+            {
+                //第三次是发完照片
                 kind=0;
+            }
+
+
+
+
+
+            else {
+                kind=0;
+                //说明发生成功之后进入的
+                //暂时不做处理，显示在朋友圈界面
               //  performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
         }
@@ -433,7 +451,7 @@ public class Weixin extends AccessibilityService{
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
-        else if (type.equals("com.tencent.mm.ui.base.j")||type.equals("com.tencent.mm.ui.base.k")) //j k ?
+        else if (type.equals("com.tencent.mm.ui.base.j")) //j k ?
         {
             list=getWindowList("照片");
             if(list.size()>0){
@@ -468,7 +486,7 @@ public class Weixin extends AccessibilityService{
             if (list.size()>0)
             {
                 list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                upLoadDone=1;
+                upLoadFlag =2;
             }
         }
 
@@ -548,13 +566,13 @@ private void common()
     private List<AccessibilityNodeInfo> getWindowList(String findText)
     {
         AccessibilityNodeInfo nodeInfo=getRootInActiveWindow();
-        List<AccessibilityNodeInfo> list = null;
+        List<AccessibilityNodeInfo> list =null;
         if (nodeInfo==null)
         {
             return null;
         }
          list = nodeInfo.findAccessibilityNodeInfosByText(findText);
-        //如何才能保证返回的list不为空呢？。。。可以没有数据，但是不能为null
+ //如何才能保证返回的list不为空呢？。。。可以没有数据，但是不能为null
         return list;
     }
 
