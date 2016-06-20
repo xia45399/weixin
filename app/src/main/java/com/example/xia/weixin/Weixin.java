@@ -53,6 +53,11 @@ public class Weixin extends AccessibilityService{
                 switch (kind)
                 {
                     case 0:
+                        getWindowList("啦啦啦").get(1).getParent().getParent().getChild(1);//第一条
+                        getWindowList("朋友圈").get(0).getParent().getParent().getChild(1);
+
+                        getWindowList("啦啦啦").get(1).getParent().getParent().performAction(4096);
+
                         break;
 
                     case 1: //抢红包
@@ -153,11 +158,12 @@ public class Weixin extends AccessibilityService{
         {//通过通知栏进入了微信
             clickLastPacket();
         }else if (type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")){
-            kind=0;
-            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-            sleep(2000);
-            kind=1;
+            //领取完红包的
+//            kind=0;
+//            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+//            sleep(2000);
+//            kind=1;
 
         }else if(type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI")){
             openpacket();
@@ -201,9 +207,9 @@ public class Weixin extends AccessibilityService{
         else {
              list = nodeInfo.findAccessibilityNodeInfosByText("開");
             nodeInfo.findAccessibilityNodeInfosByText("给你").get(0).getParent().getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            kind=0;
+        //    kind=0;
         }
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
+      //  performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
 //        kind=0;
 //        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
 //        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
@@ -279,8 +285,7 @@ public class Weixin extends AccessibilityService{
             for(;requestList.size()<40;)
 //          while (requestList.size()<40)
             {
-                list.get(0).getParent().getParent().performAction(4096);
-                sleep(1000);
+               sleep(1000);
                 nodeInfo = getRootInActiveWindow();
                 list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
 
@@ -304,8 +309,10 @@ public class Weixin extends AccessibilityService{
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                     sleep(1000);
                 }
+
+                list.get(0).getParent().getParent().performAction(4096);
             }
-            kind=0;
+            kind = 0;
             performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
         }
     }
@@ -323,7 +330,7 @@ public class Weixin extends AccessibilityService{
         list = nodeInfo.findAccessibilityNodeInfosByText("发送");
         if(list.size()>0)
         {
-            AccessibilityNodeInfo node=list.get(0);
+            AccessibilityNodeInfo node = list.get(0);
             node.performAction(AccessibilityNodeInfo.ACTION_CLICK);//界面更新
         }
     }
@@ -332,7 +339,8 @@ public class Weixin extends AccessibilityService{
         //判断是否有打招呼的人
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");//你收到2个打招呼消息
-        if(list.size()>0){
+        if (list.size() > 0)
+        {
             list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);//界面更新
         }
 
@@ -410,7 +418,7 @@ public class Weixin extends AccessibilityService{
             else {
                 //说明发生成功之后进入的
                 kind=0;
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+              //  performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
             }
         }
 
@@ -422,7 +430,7 @@ public class Weixin extends AccessibilityService{
             {
                 list=getWindowList("我知道了");
                 //可能点的不对，没有严重
-                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
         else if (type.equals("com.tencent.mm.ui.base.j")||type.equals("com.tencent.mm.ui.base.k")) //j k ?
