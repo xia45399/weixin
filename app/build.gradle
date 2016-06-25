@@ -8,8 +8,8 @@ android {
         applicationId "com.example.xia.weixin"
         minSdkVersion 16
         targetSdkVersion 21
-        versionCode 2
-        versionName "2.0 自动发朋友圈"
+        versionCode 1
+        versionName "1.0 "
     }
     buildTypes {
         release {
