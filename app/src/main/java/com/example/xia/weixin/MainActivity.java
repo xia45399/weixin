@@ -2,22 +2,36 @@ package com.example.xia.weixin;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
     private Context context;
 
+    private EditText editText1;//没用
+    private EditText editText2;//附近的人
+    private EditText editText3;//添加通讯录
+    private EditText editText4;//通过好友
+    private EditText editText5;//朋友圈
+    private EditText editText6;//点赞
+    private EditText editText7;//评论
+
+    private SharedPreferences sharedPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String version="";
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -28,34 +42,35 @@ public class MainActivity extends ActionBarActivity {
         setTitle("微信自动化"+version);
         setContentView(R.layout.activity_main);
         this.context=this;
-        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
+        initPara();
+        findViewById(R.id.button_startService).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openService();
             }
         });
-        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //自动抢红包
              startService(1);
             }
         });
-        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //附近的人
                 startService(2);
             }
         });
-        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //通讯录
                 startService(3);
             }
         });
-        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //通过好友
@@ -98,6 +113,65 @@ public class MainActivity extends ActionBarActivity {
                 Weixin.kind=0;
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences settings = this.getSharedPreferences("PREFS_CONF",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor edtor = settings.edit();
+        edtor.putString("key", "EditText的内容");
+        edtor.commit();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        //保存值
+        String edit1 = editText1.getText().toString();
+        String edit2 = editText2.getText().toString();
+        String edit3 = editText3.getText().toString();
+        String edit4 = editText4.getText().toString();
+        String edit5 = editText5.getText().toString();
+        String edit6 = editText6.getText().toString();
+        String edit7 = editText7.getText().toString();
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("editText1", edit1);
+        editor.putString("editText2", edit2);
+        editor.putString("editText3", edit3);
+        editor.putString("editText4", edit4);
+        editor.putString("editText5", edit5);
+        editor.putString("editText6", edit6);
+        editor.putString("editText7", edit7);
+        editor.commit();
+    }
+
+    private void initPara() {
+        editText1 = (EditText) findViewById(R.id.editText5);
+        editText2 = (EditText) findViewById(R.id.editText5);
+        editText3 = (EditText) findViewById(R.id.editText5);
+        editText4 = (EditText) findViewById(R.id.editText5);
+        editText5 = (EditText) findViewById(R.id.editText5);
+        editText6 = (EditText) findViewById(R.id.editText6);
+        editText7 = (EditText) findViewById(R.id.editText7);
+
+
+        String editText1String1 = sharedPref.getString("editText1", "");
+        String editText1String2 = sharedPref.getString("editText2", "");
+        String editText1String3 = sharedPref.getString("editText3", "");
+        String editText1String4 = sharedPref.getString("editText4", "");
+        String editText1String5 = sharedPref.getString("editText5", "");
+        String editText1String6 = sharedPref.getString("editText6", "");
+        String editText1String7 = sharedPref.getString("editText7", "");
+        editText1.setText(editText1String1);
+        editText2.setText(editText1String2);
+        editText3.setText(editText1String3);
+        editText4.setText(editText1String4);
+        editText5.setText(editText1String5);
+        editText6.setText(editText1String6);
+        editText7.setText(editText1String7);
+
     }
 
 

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="自动抢红包"
-                android:id="@+id/da" />
+                android:id="@+id/button1" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="附近的人"
-                android:id="@+id/button9" />
+                android:id="@+id/button2" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="添加通讯录"
-                android:id="@+id/button10" />
+                android:id="@+id/button3" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="通过好友"
-                android:id="@+id/button11" />
+                android:id="@+id/button4" />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="开启服务"
-                android:id="@+id/button12" />
+                android:id="@+id/button_startService" />
         </LinearLayout>
 
         <LinearLayout
@@ -150,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:text="暂停服务"
-                android:id="@+id/button12sa" />
+                android:id="@+id/button9" />
         </LinearLayout>
 
         <LinearLayout
