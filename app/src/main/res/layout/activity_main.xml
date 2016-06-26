@@ -68,12 +68,12 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:layout_width="50dp"
+                android:layout_width="1dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:inputType="numberSigned"
                 android:ems="10"
-                android:id="@+id/editText5" />
+                android:id="@+id/editText1" />
 
             <EditText
                 android:layout_width="50dp"
@@ -81,7 +81,7 @@
                 android:inputType="numberSigned"
                 android:layout_marginTop="40dp"
                 android:ems="10"
-                android:id="@+id/editText6" />
+                android:id="@+id/editText2" />
 
             <EditText
                 android:layout_width="0dp"
@@ -89,7 +89,7 @@
                 android:inputType="numberSigned"
                 android:layout_marginTop="50dp"
                 android:ems="10"
-                android:id="@+id/editText7" />
+                android:id="@+id/editText3" />
 
             <EditText
                 android:layout_width="0dp"
@@ -97,7 +97,7 @@
                 android:layout_marginTop="40dp"
                 android:inputType="numberSigned"
                 android:ems="10"
-                android:id="@+id/editText8" />
+                android:id="@+id/editText4" />
 
             <EditText
                 android:layout_width="0dp"
@@ -163,7 +163,7 @@
                 android:layout_marginTop="40dp"
                 android:inputType="numberSigned"
                 android:ems="10"
-                android:id="@+id/editText51" />
+                android:id="@+id/editText5" />
 
             <EditText
                 android:layout_width="66dp"
@@ -171,7 +171,7 @@
                 android:inputType="numberSigned"
                 android:layout_marginTop="40dp"
                 android:ems="10"
-                android:id="@+id/editText61" />
+                android:id="@+id/editText6" />
 
             <EditText
                 android:layout_width="66dp"
@@ -179,15 +179,16 @@
                 android:inputType="numberSigned"
                 android:layout_marginTop="50dp"
                 android:ems="10"
-                android:id="@+id/editText71" />
+                android:id="@+id/editText7" />
 
             <EditText
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="50dp"
                 android:inputType="numberSigned"
                 android:ems="10"
-                android:id="@+id/editText81" />
+                android:id="@+id/editText8"
+                android:layout_gravity="left" />
 
             <EditText
                 android:layout_width="0dp"
@@ -195,7 +196,7 @@
                 android:inputType="numberSigned"
                 android:layout_marginTop="50dp"
                 android:ems="10"
-                android:id="@+id/editText91" />
+                android:id="@+id/editText99da" />
         </LinearLayout>
 
     </LinearLayout>

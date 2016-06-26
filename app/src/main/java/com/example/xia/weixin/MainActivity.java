@@ -128,19 +128,19 @@ public class MainActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         //保存值
-        String edit1 = editText1.getText().toString();
+//        String edit1 = editText1.getText().toString();
         String edit2 = editText2.getText().toString();
-        String edit3 = editText3.getText().toString();
-        String edit4 = editText4.getText().toString();
+//        String edit3 = editText3.getText().toString();
+//        String edit4 = editText4.getText().toString();
         String edit5 = editText5.getText().toString();
         String edit6 = editText6.getText().toString();
         String edit7 = editText7.getText().toString();
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("editText1", edit1);
+//        editor.putString("editText1", edit1);
         editor.putString("editText2", edit2);
-        editor.putString("editText3", edit3);
-        editor.putString("editText4", edit4);
+//        editor.putString("editText3", edit3);
+//        editor.putString("editText4", edit4);
         editor.putString("editText5", edit5);
         editor.putString("editText6", edit6);
         editor.putString("editText7", edit7);
@@ -148,26 +148,26 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void initPara() {
-        editText1 = (EditText) findViewById(R.id.editText5);
-        editText2 = (EditText) findViewById(R.id.editText5);
-        editText3 = (EditText) findViewById(R.id.editText5);
-        editText4 = (EditText) findViewById(R.id.editText5);
+//        editText1 = (EditText) findViewById(R.id.editText1);
+        editText2 = (EditText) findViewById(R.id.editText2);
+//        editText3 = (EditText) findViewById(R.id.editText3);
+//        editText4 = (EditText) findViewById(R.id.editText4);
         editText5 = (EditText) findViewById(R.id.editText5);
         editText6 = (EditText) findViewById(R.id.editText6);
         editText7 = (EditText) findViewById(R.id.editText7);
 
 
-        String editText1String1 = sharedPref.getString("editText1", "");
+//        String editText1String1 = sharedPref.getString("editText1", "");
         String editText1String2 = sharedPref.getString("editText2", "");
-        String editText1String3 = sharedPref.getString("editText3", "");
-        String editText1String4 = sharedPref.getString("editText4", "");
+//        String editText1String3 = sharedPref.getString("editText3", "");
+//        String editText1String4 = sharedPref.getString("editText4", "");
         String editText1String5 = sharedPref.getString("editText5", "");
         String editText1String6 = sharedPref.getString("editText6", "");
         String editText1String7 = sharedPref.getString("editText7", "");
-        editText1.setText(editText1String1);
+//        editText1.setText(editText1String1);
         editText2.setText(editText1String2);
-        editText3.setText(editText1String3);
-        editText4.setText(editText1String4);
+//        editText3.setText(editText1String3);
+//        editText4.setText(editText1String4);
         editText5.setText(editText1String5);
         editText6.setText(editText1String6);
         editText7.setText(editText1String7);
