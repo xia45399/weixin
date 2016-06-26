@@ -28,34 +28,34 @@ public class MainActivity extends ActionBarActivity {
         setTitle("微信自动化"+version);
         setContentView(R.layout.activity_main);
         this.context=this;
-        findViewById(R.id.service_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openService();
             }
         });
-        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //自动抢红包
              startService(1);
             }
         });
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //附近的人
                 startService(2);
             }
         });
-        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //通讯录
                 startService(3);
             }
         });
-        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //通过好友
@@ -91,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
                 startMM();
             }
         });
-        findViewById(R.id.button0).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.button9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //暂停服务
@@ -132,7 +132,7 @@ public void myToast(String msg)
             startMM();
         }
         else {
-            myToast("开");
+            showOpenAccessibilityServiceDialog();
         }
 
     }
@@ -166,27 +166,11 @@ public void myToast(String msg)
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        myToast(id+"");
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             myToast("触发设置："+ R.id.action_settings);
             return true;
         }
-
-        if(id==1)
-        {
-            myToast("触发设置");
-            Intent intent=new Intent(this,settingActivity.class);
-            context.startActivity(intent);
-        }
-
-        if(id==2)
-        { myToast("触发about");
-            Intent intent=new Intent(this,aboutMeActivity.class);
-            startActivity(intent);
-
-        }
-
 
         return super.onOptionsItemSelected(item);
     }

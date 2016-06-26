@@ -6,13 +6,9 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -28,21 +24,19 @@ import java.util.List;
 
 public class Weixin extends AccessibilityService {
 
-    public static String PYQstring="";
+    public static String PYQstring = "";//发朋友圈的内容
 
     private static Weixin service;
-    String TAG="哈哈哈哈";
 
     public static int kind = 0;
-    public static int pauseService = 0;
     //3 完成发送朋友圈
     //2 一瞬间
     //1代表第一次进
     public static int upLoadFlag = 0;
 
-    public static int limit2=10;//附近的人一次加几个
-    public static int limit6=20;
-    public static int limit7=20;
+    public static int limit2 = 20;//附近的人一次加几个
+    public static int limit6 = 20;//点赞
+    public static int limit7 = 20;//评论
 
     @Override
     protected void onServiceConnected() {
@@ -111,7 +105,7 @@ public class Weixin extends AccessibilityService {
 
                     default:
                         //没有开启任何服务的情况
-                        MainActivity mainActivity=new MainActivity();
+                        MainActivity mainActivity = new MainActivity();
                         mainActivity.myToast("未知服务类型");
                         break;
                 }
@@ -127,21 +121,20 @@ public class Weixin extends AccessibilityService {
 
 
     private void HongBao1(String type) {
-        if (type.equals("com.tencent.mm.ui.base.g")) {
-            cancelUpDate();
-        } else if (type.equals("com.tencent.mm.ui.LauncherUI")) {//通过通知栏进入了微信
-            clickLastPacket();
-        } else if (type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
-            //领取完红包的
-//            kind=0;
-//            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//            sleep(2000);
-//            kind=1;
-
-        } else if (type.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI")) {
-            openpacket();
-            //打开红包并且返回到微信主界面
+        switch (type) {
+            case "com.tencent.mm.ui.base.g":
+                cancelUpDate();
+                break;
+            case "com.tencent.mm.ui.LauncherUI": //通过通知栏进入了微信
+                clickLastPacket();
+                break;
+            case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI":
+                //领取完红包的
+                break;
+            case "com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyReceiveUI":
+                openpacket();
+                //打开红包并且返回到微信主界面
+                break;
         }
     }
 
@@ -174,84 +167,80 @@ public class Weixin extends AccessibilityService {
             list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             sleep(1000);
         } else {
-            list = nodeInfo.findAccessibilityNodeInfosByText("開");
             nodeInfo.findAccessibilityNodeInfosByText("给你").get(0).getParent().getChild(3).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             //    kind=0;
         }
-        //  performGlobalAction(AccessibilityService.GLOBAL_ACTION_HOME);
-//        kind=0;
-//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-//        sleep(2000);
-//        kind=1;
+
     }
 
     private void FuJinRen2(String type) {
-        if (type.equals("com.tencent.mm.ui.base.g")) {
-            cancelUpDate();
-        }else if (type.equals("com.tencent.mm.ui.LauncherUI")) {
-            entry("发现");
-//            clickFujinDeRen();
-            AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//点击附近的人
-            if (list.size() > 0) {
-                AccessibilityNodeInfo parent = list.get(0).getParent();
-                if (parent != null) {
-                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                }
-            }
-        }else if(type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsIntroUI")){
+        switch (type) {
+            case "com.tencent.mm.ui.base.g":
+                //提高微信定位精度的，点击返回。。。
+                cancelUpDate();
+                break;
+            case "com.tencent.mm.ui.LauncherUI": {
+                entry("发现");
+                AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+                List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("附近的人");//点击附近的人
 
-        }
-        else if (type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI")) {
-//            otherSayHiUi();
-            //判断是否有打招呼的人
-            AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");//你收到2个打招呼消息
-            if (list.size() > 0) {
-                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);//界面更新
-            }
-        }
-        if (type.equals("com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI")) {
-            List<AccessibilityNodeInfo> list = getWindowList("查看更多");
-            if(!list.isEmpty())
-            {
-                AccessibilityNodeInfo requestListNode=list.get(0).getParent().getParent();
-                for (int i=0;i<requestListNode.getChildCount()-1;i++)
-                {
-                    requestListNode.getChild(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    sleep(1000);
-                    getWindowList("通过验证").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                    sleep(1000);
+                if (list.size() > 0) {
+                    AccessibilityNodeInfo parent = list.get(0).getParent();
+                    if (parent != null) {
+                        parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
                 }
+                break;
             }
-        }
-        if (type.equals("com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI")) {
-            NearbyFriendsList();
-        }else
-        if (type.equals("com.tencent.mm.plugin.profile.ui.ContactInfoUI")) {
-            //通过验证界面
-        }
-        //异常判断
-        if (type.equals("com.tencent.mm.ui.base.g")) {
-            //提高微信定位精度的，点击返回。。。
+            case "com.tencent.mm.plugin.nearby.ui.NearbyFriendsIntroUI":
+
+                break;
+            case "com.tencent.mm.plugin.nearby.ui.NearbyFriendShowSayHiUI": {
+//            otherSayHiUi();
+                //判断是否有打招呼的人
+                AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
+                List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("个打招呼消息");//你收到2个打招呼消息
+
+                if (list.size() > 0) {
+                    list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);//界面更新
+                }
+                break;
+            }
+            case "com.tencent.mm.plugin.nearby.ui.NearbySayHiListUI": {
+                List<AccessibilityNodeInfo> list = getWindowList("查看更多");
+                if (list != null && !list.isEmpty()) {
+                    AccessibilityNodeInfo requestListNode = list.get(0).getParent().getParent();
+                    for (int i = 0; i < requestListNode.getChildCount() - 1; i++) {
+                        requestListNode.getChild(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        sleep(1000);
+                        getWindowList("通过验证").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                        sleep(1000);
+                    }
+                }
+                break;
+            }
+            case "com.tencent.mm.plugin.nearby.ui.NearbyFriendsUI":
+                NearbyFriendsList();
+                break;
+            case "com.tencent.mm.plugin.profile.ui.ContactInfoUI":
+                //通过验证界面
+                break;
         }
 
     }
 
 
     private void NearbyFriendsList() {
-        List<String> RequestDoneList = new ArrayList<String>();
+        List<String> RequestDoneList = new ArrayList<>();
 
         //附近的人页面，查找 米以内
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
         if (list.size() > 0)//找到米以内了
         {
-           // for (; requestList.size() < limit2; )
-            while (RequestDoneList.size()<limit2)
-            {
+            // for (; requestList.size() < limit2; )
+            while (RequestDoneList.size() < limit2) {
                 sleep(1000);
                 nodeInfo = getRootInActiveWindow();
                 list = nodeInfo.findAccessibilityNodeInfosByText("米以内");
@@ -272,8 +261,7 @@ public class Weixin extends AccessibilityService {
                     sleep(2000);
                     performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
                     sleep(1000);
-                    if(RequestDoneList.size()>limit2)
-                    {
+                    if (RequestDoneList.size() >= limit2) {
                         break;
                     }
                 }
@@ -303,48 +291,29 @@ public class Weixin extends AccessibilityService {
         }
     }
 
+    /*
+        private void handle3() {
+            AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
 
+            List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("通讯录");
+            if (list.size() > 0) {
+                AccessibilityNodeInfo parent = list.get(0).getParent();
+                if (parent != null) {
+                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击通讯录
+                }
+            }
 
-    private void accept4() {
-        //判断是否有接收字样
-        AccessibilityNodeInfo nodeInfo2 = getRootInActiveWindow();
-        List<AccessibilityNodeInfo> list2 = nodeInfo2.findAccessibilityNodeInfosByText("接受");
-        if (list2.size() > 0)//如果有待通过好友
-        {
-            for (int i = 0; i < list2.size(); i++) {
-                list2.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                sleep(5000);
-                performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+            List<AccessibilityNodeInfo> list1 = nodeInfo.findAccessibilityNodeInfosByText("新的朋友");
+            if (list.size() > 0) {
+                AccessibilityNodeInfo node = list1.get(0);
+                AccessibilityNodeInfo parent = node.getParent().getParent();
+                if (parent != null) {
+                    parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
             }
         }
-        kind = 0;
-        performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-
-    }
-
-    private void handle3() {
-        AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-
-        List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText("通讯录");
-        if (list.size() > 0) {
-            AccessibilityNodeInfo parent = list.get(0).getParent();
-            if (parent != null) {
-                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);//点击通讯录
-            }
-        }
-
-        List<AccessibilityNodeInfo> list1 = nodeInfo.findAccessibilityNodeInfosByText("新的朋友");
-        if (list.size() > 0) {
-            AccessibilityNodeInfo node = list1.get(0);
-            AccessibilityNodeInfo parent = node.getParent().getParent();
-            if (parent != null) {
-                parent.performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        }
-    }
-
-    private void TongxunLu3(String type)
-    {
+    */
+    private void TongxunLu3(String type) {
 //可能出现的提示
         if (type.equals("com.tencent.mm.ui.base.g")) {
             upLoadContackTishi();//第一次会有上传通讯录的提示消息
@@ -354,14 +323,14 @@ public class Weixin extends AccessibilityService {
         if (type.equals("com.tencent.mm.ui.LauncherUI")) {
             entry("通讯录");
             List<AccessibilityNodeInfo> list = getWindowList("群聊");
-            if (list.size() > 0) {
+            if (list != null && list.size() > 0) {
                 list.get(0).getParent().getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
         //点击新的朋友
         if (type.equals("com.tencent.mm.plugin.subapp.ui.friend.FMessageConversationUI")) {
             List<AccessibilityNodeInfo> list = getWindowList("添加手机联系人");
-            if (!list.isEmpty()) {
+            if (list != null && !list.isEmpty()) {
                 list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
         }
@@ -371,6 +340,7 @@ public class Weixin extends AccessibilityService {
         }
         if (type.equals("com.tencent.mm.ui.bindmobile.MobileFriendUI")) {
             List<AccessibilityNodeInfo> list = getWindowList("添加");
+            assert list != null;
             for (int i = 0; i < list.size(); i++) {
                 list.get(i).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
@@ -381,8 +351,7 @@ public class Weixin extends AccessibilityService {
         }
     }
 
-    private void TongGuo4(String type)
-    {
+    private void TongGuo4(String type) {
         //通过好友
         if (type.equals("com.tencent.mm.ui.base.g")) {
             cancelUpDate();
@@ -395,7 +364,20 @@ public class Weixin extends AccessibilityService {
             nodeInfo.findAccessibilityNodeInfosByText("群聊").get(0).getParent().getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
         if (type.equals("com.tencent.mm.plugin.subapp.ui.friend.FMessageConversationUI")) {
-            accept4();//看是否有接收字样，有的话说明有人要加你
+            //看是否有接收字样，有的话说明有人要加你
+            //判断是否有接收字样
+            AccessibilityNodeInfo nodeInfo2 = getRootInActiveWindow();
+            List<AccessibilityNodeInfo> list2 = nodeInfo2.findAccessibilityNodeInfosByText("接受");
+            if (list2.size() > 0)//如果有待通过好友
+            {
+                for (int i = 0; i < list2.size(); i++) {
+                    list2.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    sleep(5000);
+                    performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
+                }
+            }
+            kind = 0;
+            performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
         }
     }
 
@@ -405,200 +387,187 @@ public class Weixin extends AccessibilityService {
         List<AccessibilityNodeInfo> list;
 
 
-        if (type.equals("com.tencent.mm.ui.LauncherUI")) {
-            entry("发现");
-            list = getWindowList("朋友圈");
-            if (list.size() > 0) {
-                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        }
-//这个地方问题比较大，发送朋友圈成功后也会进入这边
-        else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")) {
-
-            upLoadFlag++;
-
-            if (upLoadFlag == 1) {//第一次进 //点击相机按钮
+        switch (type) {
+            case "com.tencent.mm.ui.LauncherUI":
+                entry("发现");
                 list = getWindowList("朋友圈");
-                if (list.size() > 0) {
-                    list.get(list.size()-1).getParent().getParent().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                if (list != null && list.size() > 0) {
+                    list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
-            }
-            if(upLoadFlag==11)
-            {
-                //发完进入的，不处理
-            }
+                break;
+            //这个地方问题比较大，发送朋友圈成功后也会进入这边
+            case "com.tencent.mm.plugin.sns.ui.SnsTimeLineUI":
+                upLoadFlag++;
+                if (upLoadFlag == 1) {//第一次进 //点击相机按钮
+                    list = getWindowList("朋友圈");
+                    if (list != null && list.size() > 0) {
+                        list.get(list.size() - 1).getParent().getParent().getChild(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                }
+                if (upLoadFlag == 11) {
+                    //发完进入的，不处理
+                }
+                break;
+            case "com.tencent.mm.ui.base.g":
+                //第一次进入时的提示
+                list = getWindowList("每个人只能看到自己朋友的评论");
+                if (list != null && list.size() > 0) {
+                    list = getWindowList("我知道了");
+                    //可能点的不对，没有严重
+                    if (list != null) {
+                        list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    }
+                }
+                break;
+            case "com.tencent.mm.ui.base.j":
+                list = getWindowList("照片");
+                if (list != null && list.size() > 0) {
+                    list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+                break;
+            //点第一张图片
+            case "com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI":
+                list = getWindowList("图片");
+                if (list != null && list.size() > 0) {
+                    list.get(1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    sleep(1000);
+                }
+                break;
+            case "com.tencent.mm.plugin.gallery.ui.ImagePreviewUI":
 
-        } else if (type.equals("com.tencent.mm.ui.base.g")) {
-            //第一次进入时的提示
-            list = getWindowList("每个人只能看到自己朋友的评论");
-            if (list != null && list.size() > 0) {
-                list = getWindowList("我知道了");
-                //可能点的不对，没有严重
-                if (list != null) {
+                list = getWindowList("完成");
+                if (list != null && list.size() > 0) {
                     list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                 }
-            }
-        } else if (type.equals("com.tencent.mm.ui.base.j")) //j k ?
-        {
-            list = getWindowList("照片");
-            if (list != null && list.size() > 0) {
-                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        }
-        //点第一张图片
-        else if (type.equals("com.tencent.mm.plugin.gallery.ui.AlbumPreviewUI")) {
-            list = getWindowList("图片");
-            if (list.size() > 0) {
-                list.get(1).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                sleep(1000);
-            }
-        } else if (type.equals("com.tencent.mm.plugin.gallery.ui.ImagePreviewUI")) {
+                break;
+            case "com.tencent.mm.plugin.sns.ui.SnsUploadUI":
+                //编辑文字，
+                // 点击发送
 
-            list = getWindowList("完成");
-            if (list.size() > 0) {
-                list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        } else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsUploadUI")) {
-            //编辑文字，
-            // 点击发送
-
-            //这一刻的想法
-list=getWindowList("所在位置");
-            getWindowList("所在位置").get(0).getParent().getParent().getChild(0);
-
-
-//            clipboard.setPrimaryClip(ClipData.newPlainText(null, "内容"));
-//            ClipData clip = ClipData.newPlainText("a","a");
-//            clipboard.setPrimaryClip(clip);
-
-            ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setText(PYQstring);
-            getWindowList("所在位置").get(0).getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_PASTE);
-
-
-            list = getWindowList("发送");
-            if (list.size() > 0) {
-                list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                upLoadFlag = 10;
-                kind=0;
-            }
+                //这一刻的想法
+                list = getWindowList("所在位置");
+                getWindowList("所在位置").get(0).getParent().getParent().getChild(0);
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                clipboard.setText(PYQstring);
+                getWindowList("所在位置").get(0).getParent().getParent().getChild(0).performAction(AccessibilityNodeInfo.ACTION_PASTE);
+                list = getWindowList("发送");
+                if (list != null && list.size() > 0) {
+                    list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    upLoadFlag = 10;
+                    kind = 0;
+                }
+                break;
         }
 
     }
 
-    private void DianZan6(String type) {
-        List<AccessibilityNodeInfo> list;
-        AccessibilityNodeInfo window;
+    /*
+        private void DianZan6(String type) {
+            List<AccessibilityNodeInfo> list;
+            AccessibilityNodeInfo window;
 
-        if (type.equals("com.tencent.mm.ui.LauncherUI")) {
-            entry("发现");
-            list= getWindowList("朋友圈");
-            if (list.size() > 0) {
-                list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            }
-        }else if(type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")){
-            list=getWindowList("朋友圈");
-            if(list.size()>0)
-            {
-                //windows为整个窗口
-                window = list.get(0).getParent().getParent().getParent();
-                List<AccessibilityNodeInfo> DZlist = window.findAccessibilityNodeInfosByText("评论");
-                int m=10;
-                while(m-->0)
+            if (type.equals("com.tencent.mm.ui.LauncherUI")) {
+                entry("发现");
+                list= getWindowList("朋友圈");
+                if (list.size() > 0) {
+                    list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                }
+            }else if(type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")){
+                list=getWindowList("朋友圈");
+                if(list.size()>0)
                 {
-                    for(int i=0;i<DZlist.size();i++){
-                        //点击点赞按钮
-                        DZlist.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                        sleep(1000);
-
-                        DZlist = window.findAccessibilityNodeInfosByText("赞");
-
-                        if(DZlist.size()>0&&window.findAccessibilityNodeInfosByText("评论").size()>0)
-                        {
-                            DZlist.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                    //windows为整个窗口
+                    window = list.get(0).getParent().getParent().getParent();
+                    List<AccessibilityNodeInfo> DZlist = window.findAccessibilityNodeInfosByText("评论");
+                    int m=10;
+                    while(m-->0)
+                    {
+                        for(int i=0;i<DZlist.size();i++){
+                            //点击点赞按钮
+                            DZlist.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                             sleep(1000);
+
+                            DZlist = window.findAccessibilityNodeInfosByText("赞");
+
+                            if(DZlist.size()>0&&window.findAccessibilityNodeInfosByText("评论").size()>0)
+                            {
+                                DZlist.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                sleep(1000);
+                            }
+                            else if(window.findAccessibilityNodeInfosByText("取消").size()>0&&window.findAccessibilityNodeInfosByText("评论").size()>0){
+                                //点过赞了，下一个
+                                DZlist.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                continue;
+                            }
+                            //重新获取评论的按钮数，一般是大于1
+                            DZlist = window.findAccessibilityNodeInfosByText("评论");
                         }
-                        else if(window.findAccessibilityNodeInfosByText("取消").size()>0&&window.findAccessibilityNodeInfosByText("评论").size()>0){
-                            //点过赞了，下一个
-                            DZlist.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                            continue;
-                        }
-                        //重新获取评论的按钮数，一般是大于1
-                        DZlist = window.findAccessibilityNodeInfosByText("评论");
+                        DZlist.get(0).getParent().getParent().performAction(4096);
                     }
-                    DZlist.get(0).getParent().getParent().performAction(4096);
+
                 }
 
             }
-
-        }
-       }
-
-    private void newDianZan(String type){
+           }
+    */
+    private void newDianZan(String type) {
         List<AccessibilityNodeInfo> list;
-        AccessibilityNodeInfo window;
 
         if (type.equals("com.tencent.mm.ui.LauncherUI")) {
             entry("发现");
-            list= getWindowList("朋友圈");
-            if (list.size() > 0) {
+            list = getWindowList("朋友圈");
+            if (list != null && list.size() > 0) {
                 list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
-        }else if(type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")){
-            list=getWindowList("com.tencent.mm:id/bta");
-            while(limit6>0)
-            {
-                if (list != null && list.size() > 0)
-                {
-                    for(int i=0;i<list.size();i++)
-                    {
-                        if(list.get(i)==null||limit6==0)
+        } else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")) {
+            list = getWindowList("com.tencent.mm:id/bta");
+            while (limit6 > 0) {
+                if (list != null && list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) == null || limit6 == 0)
                             break;
                         list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         sleep(1000);
                         List<AccessibilityNodeInfo> clickZanList = getWindowList("com.tencent.mm:id/bso");
                         if (clickZanList != null && clickZanList.size() > 0) {
-                           if( clickZanList.get(0).getChild(0).getText().toString().contains("赞")) {
-                               clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                               sleep(1000);
-                               limit6--;
-                           }
+                            if (clickZanList.get(0).getChild(0).getText().toString().contains("赞")) {
+                                clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                sleep(1000);
+                                limit6--;
+                            }
                         }
                     }
                 }
                 //判断是否 结束、翻页并更新list,
-                if(limit7==0)
+                if (limit7 == 0)
                     break;
-                else
-                {
-                    list.get(0).getParent().getParent().performAction(4096);
+                else {
+                    if (list != null) {
+                        list.get(0).getParent().getParent().performAction(4096);
+                    }
                     sleep(1000);
-                    list=getWindowList("com.tencent.mm:id/bta");
+                    list = getWindowList("com.tencent.mm:id/bta");
                 }
             }
-            kind=0;
+            kind = 0;
         }
     }
 
-    private void PingLun7(String type){
+    private void PingLun7(String type) {
         List<AccessibilityNodeInfo> list;
-        AccessibilityNodeInfo window;
 
         if (type.equals("com.tencent.mm.ui.LauncherUI")) {
             entry("发现");
-            list= getWindowList("朋友圈");
-            if (list.size() > 0) {
+            list = getWindowList("朋友圈");
+            if (list != null && list.size() > 0) {
                 list.get(0).getParent().performAction(AccessibilityNodeInfo.ACTION_CLICK);
             }
-        }else if(type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")){
-            list=getWindowList("com.tencent.mm:id/bta");
-            while(limit7>0)
-            {
-                if (list != null && list.size() > 0)
-                {
-                    for(int i=0;i<list.size();i++)
-                    {
-                        if(list.get(i)==null||limit7--==0)
+        } else if (type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")) {
+            list = getWindowList("com.tencent.mm:id/bta");
+            while (limit7 > 0) {
+                if (list != null && list.size() > 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) == null || limit7-- == 0)
                             break;
                         list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         sleep(500);
@@ -608,31 +577,28 @@ list=getWindowList("所在位置");
                         }
                         sleep(1000);//等待评论框出现
                         List<AccessibilityNodeInfo> sendList = getWindowList("com.tencent.mm:id/btk");//没输内容
-                        if(sendList != null && sendList.size()>0)
-                        {
-                            ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+                        if (sendList != null && sendList.size() > 0) {
+                            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                             clipboard.setText("自动评论/::)");
                             getWindowList("com.tencent.mm:id/bti").get(0).performAction(32768);
-                            sendList=getWindowList("com.tencent.mm:id/btl");//输了内容
+                            sendList = getWindowList("com.tencent.mm:id/btl");//输了内容
                             sendList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                             sleep(1000);
                         }
                     }
                 }
                 //判断是否 结束、翻页并更新list,
-                if(limit7==0)
+                if (limit7 == 0)
                     break;
-                else
-                {
+                else {
                     if (list != null) {
                         list.get(0).getParent().getParent().performAction(4096);
                     }
-                    list=getWindowList("com.tencent.mm:id/bta");
+                    list = getWindowList("com.tencent.mm:id/bta");
                 }
             }
         }
     }
-
 
 
     private void sleep(int ms) {
@@ -669,7 +635,7 @@ list=getWindowList("所在位置");
 
     private void cancelUpDate() {
         List<AccessibilityNodeInfo> list = getWindowList("立刻安装");
-        if (!list.isEmpty()) {
+        if (list != null && !list.isEmpty()) {
             list = getWindowList("取消");
             list.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
         }
@@ -677,7 +643,9 @@ list=getWindowList("所在位置");
         list = getWindowList("是否取消安装");
         if (!list.isEmpty()) {
             list = getWindowList("是");
-            list.get(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            if (list != null) {
+                list.get(1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            }
         }
 
     }
@@ -695,6 +663,7 @@ list=getWindowList("所在位置");
 
     /**
      * 返回查找文字的list
+     *
      * @param findText
      * @return
      */
@@ -705,10 +674,9 @@ list=getWindowList("所在位置");
         if (nodeInfo == null) {
             return null;
         }
-        if(findText.contains("com.tencent.mm:id")){
-            list=nodeInfo.findAccessibilityNodeInfosByViewId(findText);
-        }
-        else {
+        if (findText.contains("com.tencent.mm:id")) {
+            list = nodeInfo.findAccessibilityNodeInfosByViewId(findText);
+        } else {
             list = nodeInfo.findAccessibilityNodeInfosByText(findText);
         }
         //如何才能保证返回的list不为空呢？。。。可以没有数据，但是不能为null
@@ -716,18 +684,16 @@ list=getWindowList("所在位置");
     }
 
 
-
-
     //判断服务是否开启
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean isRunning() {
-        if(service == null) {
+        if (service == null) {
             return false;
         }
 
-        AccessibilityManager accessibilityManager= (AccessibilityManager) service.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        AccessibilityManager accessibilityManager = (AccessibilityManager) service.getSystemService(Context.ACCESSIBILITY_SERVICE);
         AccessibilityServiceInfo info = service.getServiceInfo();
-        if (info==null){
+        if (info == null) {
             return false;
         }
         List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
@@ -736,20 +702,18 @@ list=getWindowList("所在位置");
         boolean isConnect = false;
         while (iterator.hasNext()) {
             AccessibilityServiceInfo i = iterator.next();
-            if(i.getId().equals(info.getId())) {
+            if (i.getId().equals(info.getId())) {
                 isConnect = true;
                 break;
             }
         }
-        if(!isConnect) {
+        if (!isConnect) {
             return false;
         }
 
         return true;
 
     }
-
-
 
 
 }

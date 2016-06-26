@@ -9,131 +9,195 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.xia.weixin.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/textView" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/linearLayout"
+        android:weightSum="1">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开启服务"
-        android:id="@+id/service_button"
-        android:layout_marginBottom="55dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/button3"
-        android:layout_alignEnd="@+id/button3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="110dp"
+            android:layout_height="match_parent">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="3添加通讯录"
-        android:id="@+id/button3"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button2"
-        android:layout_alignEnd="@+id/button2" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="自动抢红包"
+                android:id="@+id/da" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="暂停服务"
-        android:id="@+id/button0"
-        android:layout_alignTop="@+id/service_button"
-        android:layout_alignLeft="@+id/button7"
-        android:layout_alignStart="@+id/button7"
-        android:layout_alignRight="@+id/button8"
-        android:layout_alignEnd="@+id/button8"/>
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="附近的人"
+                android:id="@+id/button9" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="开启自动抢红包"
-        android:id="@+id/button1"
-        android:layout_above="@+id/button2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="38dp" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="添加通讯录"
+                android:id="@+id/button10" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2附近的任"
-        android:id="@+id/button2"
-        android:layout_marginBottom="38dp"
-        android:layout_above="@+id/button3"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button1"
-        android:layout_alignEnd="@+id/button1" />
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="通过好友"
+                android:id="@+id/button11" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="发 朋 友 圈  "
-        android:id="@+id/button5"
-        android:layout_alignTop="@+id/button1"
-        android:layout_alignLeft="@+id/button6"
-        android:layout_alignStart="@+id/button6"
-        android:layout_alignRight="@+id/button6"
-        android:layout_alignEnd="@+id/button6"/>
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="开启服务"
+                android:id="@+id/button12" />
+        </LinearLayout>
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="点赞 一次。"
-        android:id="@+id/button6"
-        android:layout_alignTop="@+id/button2"
-        android:layout_alignLeft="@+id/button7"
-        android:layout_alignStart="@+id/button7"
-        android:layout_alignRight="@+id/button7"
-        android:layout_alignEnd="@+id/button7"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="50dp"
+            android:layout_height="match_parent">
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="评论 来 没做"
-        android:id="@+id/button7"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="38dp"
-        android:layout_marginEnd="38dp"/>
+            <EditText
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/editText5" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="4通过好友"
-        android:id="@+id/button4"
-        android:layout_alignTop="@+id/button8"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/button3"
-        android:layout_alignEnd="@+id/button3" />
+            <EditText
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:id="@+id/editText6" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="启动微信"
-        android:id="@+id/button8"
-        android:layout_below="@+id/button7"
-        android:layout_marginTop="40dp"
-        android:layout_alignLeft="@+id/button7"
-        android:layout_alignStart="@+id/button7"
-        android:layout_alignRight="@+id/button7"
-        android:layout_alignEnd="@+id/button7"/>
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="50dp"
+                android:ems="10"
+                android:id="@+id/editText7" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/editText8" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="50dp"
+                android:ems="10"
+                android:id="@+id/editText9" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="116dp"
+            android:layout_height="match_parent">
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="116dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="发朋友圈"
+                android:id="@+id/button5" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="116dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="点赞"
+                android:id="@+id/button6" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="116dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="评论"
+                android:id="@+id/button7" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="116dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="启动微信"
+                android:id="@+id/button8" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="116dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="暂停服务"
+                android:id="@+id/button12sa" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="66dp"
+            android:layout_height="match_parent">
+            <EditText
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/editText51" />
+
+            <EditText
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="40dp"
+                android:ems="10"
+                android:id="@+id/editText61" />
+
+            <EditText
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="50dp"
+                android:ems="10"
+                android:id="@+id/editText71" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:inputType="numberSigned"
+                android:ems="10"
+                android:id="@+id/editText81" />
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="numberSigned"
+                android:layout_marginTop="50dp"
+                android:ems="10"
+                android:id="@+id/editText91" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
