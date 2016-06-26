@@ -1,6 +1,7 @@
 package com.example.xia.weixin;
 
 import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.AccessibilityServiceInfo;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Notification;
@@ -8,14 +9,17 @@ import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -37,16 +41,14 @@ public class Weixin extends AccessibilityService {
     public static int upLoadFlag = 0;
 
     public static int limit2=10;//附近的人一次加几个
-    public static int limit3=10;//
-    public static int limit4=10;
-    public static int limit5=10;
-    public static int limit6=10;
-    public static int limit7=5;
+    public static int limit6=20;
+    public static int limit7=20;
 
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
         service = this;
+        Toast.makeText(this, "已连接服务", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -544,21 +546,23 @@ list=getWindowList("所在位置");
             }
         }else if(type.equals("com.tencent.mm.plugin.sns.ui.SnsTimeLineUI")){
             list=getWindowList("com.tencent.mm:id/bta");
-            while(limit7>0)
+            while(limit6>0)
             {
                 if (list != null && list.size() > 0)
                 {
                     for(int i=0;i<list.size();i++)
                     {
-                        if(list.get(i)==null||limit7--==0)
+                        if(list.get(i)==null||limit6==0)
                             break;
                         list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         sleep(1000);
                         List<AccessibilityNodeInfo> clickZanList = getWindowList("com.tencent.mm:id/bso");
                         if (clickZanList != null && clickZanList.size() > 0) {
-                            clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-                            sleep(1000);
-                            limit7--;
+                           if( clickZanList.get(0).getChild(0).getText().toString().contains("赞")) {
+                               clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                               sleep(1000);
+                               limit6--;
+                           }
                         }
                     }
                 }
@@ -568,9 +572,11 @@ list=getWindowList("所在位置");
                 else
                 {
                     list.get(0).getParent().getParent().performAction(4096);
+                    sleep(1000);
                     list=getWindowList("com.tencent.mm:id/bta");
                 }
             }
+            kind=0;
         }
     }
 
@@ -595,19 +601,19 @@ list=getWindowList("所在位置");
                         if(list.get(i)==null||limit7--==0)
                             break;
                         list.get(i).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-
+                        sleep(500);
                         List<AccessibilityNodeInfo> clickZanList = getWindowList("com.tencent.mm:id/bsr");
                         if (clickZanList != null && clickZanList.size() > 0) {
                             clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                         }
                         sleep(1000);//等待评论框出现
-                        List<AccessibilityNodeInfo> sendList = getWindowList("com.tencent.mm:id/btl");
+                        List<AccessibilityNodeInfo> sendList = getWindowList("com.tencent.mm:id/btk");//没输内容
                         if(sendList != null && sendList.size()>0)
                         {
                             ClipboardManager clipboard = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
                             clipboard.setText("自动评论/::)");
                             getWindowList("com.tencent.mm:id/bti").get(0).performAction(32768);
-                            sendList=getWindowList("com.tencent.mm:id/btl");
+                            sendList=getWindowList("com.tencent.mm:id/btl");//输了内容
                             sendList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
                             sleep(1000);
                         }
@@ -618,7 +624,9 @@ list=getWindowList("所在位置");
                     break;
                 else
                 {
-                    list.get(0).getParent().getParent().performAction(4096);
+                    if (list != null) {
+                        list.get(0).getParent().getParent().performAction(4096);
+                    }
                     list=getWindowList("com.tencent.mm:id/bta");
                 }
             }
@@ -676,7 +684,6 @@ list=getWindowList("所在位置");
 
     private void entry(String a) {
         AccessibilityNodeInfo nodeInfo = getRootInActiveWindow();
-
         List<AccessibilityNodeInfo> list = nodeInfo.findAccessibilityNodeInfosByText(a);
         if (list.size() > 0) {
             AccessibilityNodeInfo parent = list.get(0).getParent();
@@ -711,27 +718,33 @@ list=getWindowList("所在位置");
 
 
 
-    //判断服务是否开启，未实现，有问题
+    //判断服务是否开启
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public static boolean isRunning() {
-//        AccessibilityManager accessibilityManager= (AccessibilityManager) service.getSystemService(Context.ACCESSIBILITY_SERVICE);
-//        AccessibilityServiceInfo info = service.getServiceInfo();
-//        if (info==null){
-//            return false;
-//        }
-//        List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
-//        Iterator<AccessibilityServiceInfo> iterator = list.iterator();
+        if(service == null) {
+            return false;
+        }
+
+        AccessibilityManager accessibilityManager= (AccessibilityManager) service.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        AccessibilityServiceInfo info = service.getServiceInfo();
+        if (info==null){
+            return false;
+        }
+        List<AccessibilityServiceInfo> list = accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+        Iterator<AccessibilityServiceInfo> iterator = list.iterator();
 //
-//        boolean isConnect = false;
-//        while (iterator.hasNext()) {
-//            AccessibilityServiceInfo i = iterator.next();
-//            if(i.getId().equals(info.getId())) {
-//                isConnect = true;
-//                break;
-//            }
-//        }
-//        if(!isConnect) {
-//            return false;
-//        }
+        boolean isConnect = false;
+        while (iterator.hasNext()) {
+            AccessibilityServiceInfo i = iterator.next();
+            if(i.getId().equals(info.getId())) {
+                isConnect = true;
+                break;
+            }
+        }
+        if(!isConnect) {
+            return false;
+        }
+
         return true;
 
     }

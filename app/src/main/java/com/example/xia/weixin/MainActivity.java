@@ -18,10 +18,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
         String version="";
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -41,65 +37,52 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Weixin.isRunning())
-                {
-                    Weixin.kind=1;
-                    myToast("开始监控微信红包");
-                }
-                else {
-                    myToast("还未开启服务");
-
-                }
+                //自动抢红包
+             startService(1);
             }
         });
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.kind=2;
                 //附近的人
-                startMM();
+                startService(2);
             }
         });
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.kind=3;
                 //通讯录
-                startMM();
+                startService(3);
             }
         });
         findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.kind=4;
-                //通过
-                startMM();
+                //通过好友
+                startService(4);
             }
         });
         findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Weixin.PYQstring="自动说说";
-                Weixin.kind=5;
                 Weixin.upLoadFlag =0;
                 myToast("发送一次朋友圈后会暂停服务");
-                startMM();
+                startService(5);
             }
         });
         findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.kind=6;
                 //点赞
-                startMM();
+                startService(6);
             }
         });
         findViewById(R.id.button7).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.kind=7;
                 //评论
-                startMM();
+                startService(7);
             }
         });
         findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
@@ -111,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.button0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //暂停服务
                 Weixin.kind=0;
             }
         });
@@ -140,11 +124,19 @@ public void myToast(String msg)
         context.startActivity(intent);
     }
 
-    private void startSetting()
+    private void startService(int kind)
     {
-        Intent intent = new Intent(this,context.getClass());
-        context.startActivity(intent);
+        if(Weixin.isRunning())
+        {
+            Weixin.kind=kind;
+            startMM();
+        }
+        else {
+            myToast("开");
+        }
+
     }
+
 
 
 
@@ -162,8 +154,8 @@ public void myToast(String msg)
         MenuItem setting=menu.add(0,1,2,"设置");
         setting.setShowAsAction(0);
 
-        MenuItem about=menu.add(0,2,2,"关于");
-        about.setShowAsAction(0);
+ //       MenuItem about=menu.add(0,2,2,"关于");
+     //   about.setShowAsAction(0);
         return super.onCreateOptionsMenu(menu);
 //        return true;
     }
@@ -185,7 +177,7 @@ public void myToast(String msg)
         {
             myToast("触发设置");
             Intent intent=new Intent(this,settingActivity.class);
-            startActivity(intent);
+            context.startActivity(intent);
         }
 
         if(id==2)
