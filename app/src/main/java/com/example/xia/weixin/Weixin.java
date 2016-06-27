@@ -25,6 +25,7 @@ import java.util.List;
 public class Weixin extends AccessibilityService {
 
     public static String PYQstring = "";//发朋友圈的内容
+    public static String MYname = "啦啦啦";
 
     private static Weixin service;
 
@@ -598,6 +599,33 @@ public class Weixin extends AccessibilityService {
                         }
                         //有人评论，判断有没有自己
                         else {
+                            List<AccessibilityNodeInfo> PLlist = list.get(i).findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bwn");
+                            for (AccessibilityNodeInfo node : PLlist) {
+                                if (!node.findAccessibilityNodeInfosByText(MYname).isEmpty()) {
+                                    //自己评论过，下一个
+                                    break;
+                                } else {
+                                    list.get(i).findAccessibilityNodeInfosByViewId("com.tencent.mm:id/bta").get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                    List<AccessibilityNodeInfo> clickZanList = getWindowList("com.tencent.mm:id/bsr");
+                                    if (clickZanList != null && clickZanList.size() > 0) {
+                                        clickZanList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                    }
+                                    sleep(1000);//等待评论框出现
+                                    List<AccessibilityNodeInfo> sendList = getWindowList("com.tencent.mm:id/btk");//没输内容
+                                    if (sendList != null && sendList.size() > 0) {
+                                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                        clipboard.setText("自动评论/::)" + limit7);
+                                        getWindowList("com.tencent.mm:id/bti").get(0).performAction(32768);
+                                        sendList = getWindowList("com.tencent.mm:id/btl");//输了内容
+                                        sendList.get(0).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+                                        limit7--;
+                                        flagFY = 0;
+                                        sleep(1000);
+                                    }
+                                    break;
+                                }
+                            }
+
 
                         }
                     }
@@ -608,8 +636,10 @@ public class Weixin extends AccessibilityService {
                     }
                 }
                 //判断是否 结束、翻页并更新list,
-                if (limit7 == 0)
+                if (limit7 == 0) {
+                    kind = 0;
                     break;
+                }
             }
         }
     }
