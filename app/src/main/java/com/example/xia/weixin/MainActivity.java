@@ -26,22 +26,25 @@ public class MainActivity extends ActionBarActivity {
     private EditText editText6;//点赞
     private EditText editText7;//评论
 
+    private EditText editText12;//朋友圈内容
+
     private SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String version="";
+        String version = "";
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
             version = " v" + info.versionName;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        setTitle("微信自动化"+version);
+        setTitle("微信自动化" + version);
         setContentView(R.layout.activity_main);
-        this.context=this;
+        this.context = this;
         initPara();
         findViewById(R.id.button_startService).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,13 +56,14 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //自动抢红包
-             startService(1);
+                startService(1);
             }
         });
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //附近的人
+                Weixin.limit2=String2Num(editText2.getText().toString());
                 startService(2);
             }
         });
@@ -80,16 +84,18 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.PYQstring="自动说说";
-                Weixin.upLoadFlag =0;
-                myToast("发送一次朋友圈后会暂停服务");
+                Weixin.PYQstring =editText12.getText().toString();
+                Weixin.upLoadFlag = 0;
+                Weixin.photo=String2Num(editText5.getText().toString());
                 startService(5);
+                myToast("发送一次朋友圈后会暂停服务");
             }
         });
         findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //点赞
+                Weixin.limit6=String2Num(editText6.getText().toString());
                 startService(6);
             }
         });
@@ -97,6 +103,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //评论
+                Weixin.limit7=String2Num(editText7.getText().toString());
                 startService(7);
             }
         });
@@ -110,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //暂停服务
-                Weixin.kind=0;
+                Weixin.kind = 0;
             }
         });
     }
@@ -130,20 +137,22 @@ public class MainActivity extends ActionBarActivity {
         //保存值
 //        String edit1 = editText1.getText().toString();
         String edit2 = editText2.getText().toString();
-//        String edit3 = editText3.getText().toString();
-//        String edit4 = editText4.getText().toString();
+////        String edit3 = editText3.getText().toString();
+////        String edit4 = editText4.getText().toString();
         String edit5 = editText5.getText().toString();
         String edit6 = editText6.getText().toString();
         String edit7 = editText7.getText().toString();
-
+        String edit12 = editText12.getText().toString();
+//
         SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putString("editText1", edit1);
+////        editor.putString("editText1", edit1);
         editor.putString("editText2", edit2);
-//        editor.putString("editText3", edit3);
-//        editor.putString("editText4", edit4);
+////        editor.putString("editText3", edit3);
+////        editor.putString("editText4", edit4);
         editor.putString("editText5", edit5);
         editor.putString("editText6", edit6);
         editor.putString("editText7", edit7);
+        editor.putString("editText12", edit12);
         editor.commit();
     }
 
@@ -155,6 +164,9 @@ public class MainActivity extends ActionBarActivity {
         editText5 = (EditText) findViewById(R.id.editText5);
         editText6 = (EditText) findViewById(R.id.editText6);
         editText7 = (EditText) findViewById(R.id.editText7);
+        editText12 = (EditText) findViewById(R.id.editText12);
+
+        editText2.requestFocus();
 
 
 //        String editText1String1 = sharedPref.getString("editText1", "");
@@ -164,6 +176,9 @@ public class MainActivity extends ActionBarActivity {
         String editText1String5 = sharedPref.getString("editText5", "");
         String editText1String6 = sharedPref.getString("editText6", "");
         String editText1String7 = sharedPref.getString("editText7", "");
+        String editText1String12 = sharedPref.getString("editText12", "");
+
+
 //        editText1.setText(editText1String1);
         editText2.setText(editText1String2);
 //        editText3.setText(editText1String3);
@@ -171,15 +186,15 @@ public class MainActivity extends ActionBarActivity {
         editText5.setText(editText1String5);
         editText6.setText(editText1String6);
         editText7.setText(editText1String7);
+        editText12.setText(editText1String12);
 
     }
 
 
+    public void myToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 
-public void myToast(String msg)
-{
-    Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-}
     private void openService() {
         try {
             Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
@@ -189,32 +204,36 @@ public void myToast(String msg)
             e.printStackTrace();
         }
     }
-    private void startMM()
-    {
-        PackageManager packageManager=context.getPackageManager();
+
+    private void startMM() {
+        PackageManager packageManager = context.getPackageManager();
         Intent intent = new Intent();
         intent = packageManager.getLaunchIntentForPackage("com.tencent.mm");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_CLEAR_TOP) ;
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
     }
 
-    private void startService(int kind)
-    {
-        if(Weixin.isRunning())
-        {
-            Weixin.kind=kind;
+    private void startService(int kind) {
+        if (Weixin.isRunning()) {
+            Weixin.kind = kind;
             startMM();
-        }
-        else {
+        } else {
             showOpenAccessibilityServiceDialog();
         }
+    }
 
+    private int String2Num(String numString){
+        if(!numString.isEmpty())
+        {
+           return (int) Long.parseLong(numString);
+        }
+        return  1;
     }
 
 
-
-
-    /** 显示未开启辅助服务的对话框*/
+    /**
+     * 显示未开启辅助服务的对话框
+     */
     private void showOpenAccessibilityServiceDialog() {
         myToast("未开启服务");
     }
@@ -223,13 +242,13 @@ public void myToast(String msg)
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-       // getMenuInflater().inflate(R.menu.menu_main, menu);
+        // getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem setting=menu.add(0,1,2,"设置");
+        MenuItem setting = menu.add(0, 1, 2, "设置");
         setting.setShowAsAction(0);
 
- //       MenuItem about=menu.add(0,2,2,"关于");
-     //   about.setShowAsAction(0);
+        //       MenuItem about=menu.add(0,2,2,"关于");
+        //   about.setShowAsAction(0);
         return super.onCreateOptionsMenu(menu);
 //        return true;
     }
@@ -242,7 +261,7 @@ public void myToast(String msg)
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            myToast("触发设置："+ R.id.action_settings);
+            myToast("触发设置：" + R.id.action_settings);
             return true;
         }
 
