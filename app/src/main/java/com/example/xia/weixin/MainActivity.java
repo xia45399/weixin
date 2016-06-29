@@ -63,7 +63,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //附近的人
-                Weixin.limit2=String2Num(editText2.getText().toString());
+                Weixin.limit2 = String2Num(editText2.getText().toString());
                 startService(2);
             }
         });
@@ -84,9 +84,9 @@ public class MainActivity extends ActionBarActivity {
         findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Weixin.PYQstring =editText12.getText().toString();
+                Weixin.PYQstring = editText12.getText().toString();
                 Weixin.upLoadFlag = 0;
-                Weixin.photo=String2Num(editText5.getText().toString());
+                Weixin.photo = String2Num(editText5.getText().toString());
                 startService(5);
                 myToast("发送一次朋友圈后会暂停服务");
             }
@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //点赞
-                Weixin.limit6=String2Num(editText6.getText().toString());
+                Weixin.limit6 = String2Num(editText6.getText().toString());
                 startService(6);
             }
         });
@@ -103,7 +103,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 //评论
-                Weixin.limit7=String2Num(editText7.getText().toString());
+                Weixin.limit7 = String2Num(editText7.getText().toString());
                 startService(7);
             }
         });
@@ -222,12 +222,11 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private int String2Num(String numString){
-        if(!numString.isEmpty())
-        {
-           return (int) Long.parseLong(numString);
+    private int String2Num(String numString) {
+        if (!numString.isEmpty()) {
+            return (int) Long.parseLong(numString);
         }
-        return  1;
+        return 1;
     }
 
 
@@ -244,13 +243,12 @@ public class MainActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         // getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem setting = menu.add(0, 1, 2, "设置");
-        setting.setShowAsAction(0);
+//        MenuItem setting = menu.add(0, 1, 2, "设置");
+//        setting.setShowAsAction(0);
 
-        //       MenuItem about=menu.add(0,2,2,"关于");
-        //   about.setShowAsAction(0);
+        MenuItem about = menu.add(0, 2, 2, "关于");
+        about.setShowAsAction(0);
         return super.onCreateOptionsMenu(menu);
-//        return true;
     }
 
     @Override
@@ -263,6 +261,11 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             myToast("触发设置：" + R.id.action_settings);
             return true;
+        }
+        if (id == 2) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+
         }
 
         return super.onOptionsItemSelected(item);

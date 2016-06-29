@@ -17,8 +17,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SettingFragement"
-            android:label="设置">
+        <activity android:name=".AboutActivity"
+            android:label="关于">
         </activity>
 
 
